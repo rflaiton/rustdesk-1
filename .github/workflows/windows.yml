@@ -1,25 +1,37 @@
+<<<<<<< HEAD
 name: Build RustDesk Windows
 
 on:
   push:
     branches:
       - main
+=======
+name: RustDesk Windows Build
+
+on:
+  push:
+    branches: [ main ]
+>>>>>>> 1d043406d (custom server config)
   workflow_dispatch:
 
 jobs:
   build-windows:
     runs-on: windows-latest
 
+<<<<<<< HEAD
     env:
       VCPKG_ROOT: C:\vcpkg
       VCPKG_DEFAULT_TRIPLET: x64-windows-static
 
+=======
+>>>>>>> 1d043406d (custom server config)
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
+<<<<<<< HEAD
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -39,10 +51,21 @@ jobs:
       - name: Build RustDesk
         run: |
           cargo build --release
+=======
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Build RustDesk
+        run: cargo build --release
+>>>>>>> 1d043406d (custom server config)
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: rustdesk-windows
+<<<<<<< HEAD
           path: target\release\*.exe
 
+=======
+          path: target/release/*.exe
+>>>>>>> 1d043406d (custom server config)

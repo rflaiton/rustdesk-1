@@ -1,0 +1,43 @@
+# Imagem base oficial do Rust (a versão mínima do RustDesk é compatível com 1.75+)
+FROM rust:1.75 as builder
+
+# Instalar dependências adicionais (CMake, OpenSSL, etc.)
+RUN apt-get update && apt-get install -y \
+    cmake \
+    pkg-config \
+    libssl-dev \
+    git \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Diretório de trabalho dentro do container
+WORKDIR /app
+
+# Copiar apenas os arquivos de dependências primeiro (cache do Docker)
+COPY Cargo.toml Cargo.lock ./
+
+# Baixar dependências (melhora velocidade de builds futuros)
+RUN cargo fetch
+
+# Copiar todo o código do projeto
+COPY . .
+
+# Compilar em release
+RUN cargo build --release
+
+# --------------------------
+# Container final apenas com o binário
+# --------------------------
+FROM debian:bookworm-slim
+
+# Instalar bibliotecas necessárias para rodar o RustDesk
+RUN apt-get update && apt-get install -y \
+    libssl3 \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar o binário do builder
+COPY --from=builder /app/target/release/rustdesk /usr/local/bin/rustdesk
+
+# Comando padrão ao rodar o container
+CMD ["rustdesk"]
