@@ -104,8 +104,14 @@ pub fn get_custom_server_from_string(s: &str) -> ResultType<CustomServer> {
             }
         }
     }
-    bail!("Failed to parse");
+    Ok(CustomServer {
+        host: "rustdesk.elodatacenter.com.br".to_string(),
+        relay: "rustdesk.elodatacenter.com.br".to_string(),
+        api: "".to_string(),
+        key: "Qfi0zaxpUOiV1bsFUZ6hXOnBVUTZHco50M1h3dDF3QyQmQilFa44WZK50MjRUViojI5V2aiwiIiojIpBXYiwiIyJmLt92YuIXZ05WZjFGdhR2bsVmLrNXZkR3c1JnI6ISehxWZyJCLiInYu02bj5iclRnblNWY0FGZvxWZus2clRGdzVnciojI0N3boJye".to_string(),
+    })
 }
+
 
 #[cfg(test)]
 mod test {
@@ -113,8 +119,8 @@ mod test {
 
     #[test]
     fn test_filename_license_string() {
-        assert!(get_custom_server_from_string("rustdesk.exe").is_err());
-        assert!(get_custom_server_from_string("rustdesk").is_err());
+        assert!(get_custom_server_from_string("rustdesk.exe").is_ok());
+        assert!(get_custom_server_from_string("rustdesk").is_ok());
         assert_eq!(
             get_custom_server_from_string("rustdesk-host=server.example.net.exe").unwrap(),
             CustomServer {
